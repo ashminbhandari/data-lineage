@@ -5,7 +5,7 @@ import QueryMessage from "./QueryMessage";
 
 const Bottom = () => {
   return (
-    <div>
+    <div className="d-flex flex-column gap-3">
       <DBTableDropdown />
       <TableView />
       <QueryMessage />
