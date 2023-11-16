@@ -1,11 +1,15 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import SqlEditor from './components/SQLEditor';
-import React from 'react';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import SqlEditor from "./components/SQLEditor";
+import React from "react";
+import DatabaseCredentials from "./components/DatabaseCredentials";
 
 function App() {
   return (
-    <SqlEditor/>
+    <div className="w-100">
+      <DatabaseCredentials />
+      <SqlEditor />
+    </div>
   );
 }
 
