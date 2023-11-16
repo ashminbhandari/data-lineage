@@ -24,10 +24,10 @@ const DatabaseCredentials = () => {
         <Form.Control
           type="password"
           id="dbPassword"
-          aria-describedby="db password"
+          aria-describedby="passwordHelpBlock"
         />
       </div>
-      <Button variant="primary">Connect</Button>
+      <Button variant="primary" disabled>Connect</Button>
     </div>
   );
 };
