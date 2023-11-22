@@ -3,15 +3,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SqlEditor from "./components/SQLEditor";
 import React from "react";
 import DatabaseCredentials from "./components/DatabaseCredentials";
-import Bottom from "./components/Bottom";
+import DBTableDropdown from "./components/DBTableDropdown";
+import TableView from "./components/TableView";
+import QueryMessage from "./components/QueryMessage";
 
 function App() {
   return (
-    <div>
-      <DatabaseCredentials />
+    <>
+      <DatabaseCredentials/>
       <SqlEditor />
-      <Bottom />
-    </div>
+      <DBTableDropdown />
+      <TableView />
+      <QueryMessage />
+    </>
   );
 }
 
