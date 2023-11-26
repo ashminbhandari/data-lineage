@@ -10,7 +10,7 @@ class LineageDB {
         this.db_type = db_type;
         this.mode = db_mode;
 
-        this.db = new sqlite.Database(':memory', (err) => {
+        this.db = new sqlite.Database(db_type, sqlite[db_mode], (err) => {
             if (err) {
                 return console.error(err.message);
             }
@@ -31,8 +31,40 @@ class LineageDB {
     }
 
     //run a query against the db
-    query() {
+    query(query_str, params = []) {
+        return new Promise((resolve, reject) => {
+            this.db.all(query_str, params, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
 
+    insert(table, data) {
+        const keys = Object.keys(data);
+        const values = Object.values(data);
+
+        const placeholders = keys.map(() => '?').join(',');
+        const query = `INSERT INTO ${table} (${keys.join(',')}) VALUES (${placeholders})`;
+
+        return this.query(query, values);
+    }
+
+    update(table, data, condition) {
+        const updates = Object.keys(data).map(key => `${key} = ?`);
+        const values = Object.values(data);
+
+        const query = `UPDATE ${table} SET ${updates.join(', ')} WHERE ${condition}`;
+
+        return this.query(query, values);
+    }
+
+    delete(table, condition) {
+        const query = `DELETE FROM ${table} WHERE ${condition}`;
+        return this.query(query);
     }
 };
 
