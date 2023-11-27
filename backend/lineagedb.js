@@ -68,4 +68,4 @@ class LineageDB {
     }
 };
 
-export default LineageDB;
+module.exports = LineageDB;

@@ -1,5 +1,5 @@
 const express = require('express');
-const { default: LineageDB } = require('./lineagedb');
+const LineageDB = require('./lineagedb');
 
 const app = express();
 const port = 3001;
