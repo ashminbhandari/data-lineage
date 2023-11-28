@@ -50,4 +50,3 @@ CREATE TABLE LineageEventRaw (
     timestamp DATE NOT NULL
 )
 
-insert into tablex select * from tabley

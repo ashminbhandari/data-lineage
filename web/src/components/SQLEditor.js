@@ -5,7 +5,7 @@ import "brace/mode/sql";
 import "brace/theme/monokai";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const SqlEditor = () => {
+const SqlEditor = (props) => {
   const [sqlQuery, setSqlQuery] = useState("");
 
   const handleExecuteClick = async (sqlQuery) => {
@@ -21,7 +21,13 @@ const SqlEditor = () => {
     await fetch('http://localhost:3001/api/lineage/executeQuery', requestOptions)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        if (data.err) {
+          alert(data.err);
+        } else if (data.query_result.length == 0) {
+          alert("0 rows returned");
+        } else if (data.query_result.length > 0){
+          props.setTableData(data.query_result);
+        }
       });
   }
 

@@ -16,10 +16,8 @@ const get_flat_lineage_from_query = (sqlQuery) => {
     const lineage_json = JSON.parse(lineage);
     const source = regex_extract_tbl_names(lineage_json.source);
     const target = regex_extract_tbl_names(lineage_json.target);
-    console.log(source)
-    console.log(target)
     const flat_lineage = [];
-    for (let i = 0; i < source.length; i++) {ee
+    for (let i = 0; i < source.length; i++) {
         for (let j = 0; j < target.length; j++) {
             flat_lineage.push([source[i], target[j]])
         }
@@ -32,6 +30,10 @@ app.post('/api/lineage/executeQuery', bodyParser.json(), async (req, res, next) 
     let queryResult = [];
 
     try {
+
+        // first exec query (only proceed to save lineage if the query succeeds)
+        queryResult = await db.query(req.body.sqlQuery);
+
         const flat_lineage = get_flat_lineage_from_query(req.body.sqlQuery);
         const date_now = new Date().toISOString();
 
@@ -41,20 +43,19 @@ app.post('/api/lineage/executeQuery', bodyParser.json(), async (req, res, next) 
             let target = flat_lineage[i][1];
 
             try {
-                const result = await db.db.run(`INSERT INTO LineageEventRaw VALUES(?, ?, ?)`, [source, target, date_now]);
+                await db.db.run(`INSERT INTO LineageEventRaw VALUES(?, ?, ?)`, [source, target, date_now]);
                 lineageResult.push({ success: true, source, target });
             } catch (error) {
                 lineageResult.push({ success: false, error: error.message });
             }
         }
-
-        // Continue with other asynchronous operations (if any)
-        queryResult = await db.query(req.body.sqlQuery);
-
+      
         res.status(200).json({
             lineage_result: lineageResult,
             query_result: queryResult,
         });
+
+        
     } catch (error) {
         res.status(500).json({'lineage_result': lineageResult, 'query_result': queryResult, 'err': error.message});
     }
@@ -139,3 +140,4 @@ app.use((err, req, res, next) => {
 const server = app.listen(port, (req, res) => {
     console.log('DataLineage app server is running');
 });
+
