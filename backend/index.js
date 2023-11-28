@@ -1,5 +1,6 @@
 import express, { query } from 'express';
 import LineageDB from './lineagedb.js';
+import ProducerSim from './simulate_producer.js';
 import cors from 'cors';
 import {spawnSync} from 'child_process';
 import bodyParser from 'body-parser';
@@ -9,6 +10,7 @@ app.use(cors());
 
 const port = 3001;
 const db = new LineageDB('./db/chinook.db');
+const psim = new ProducerSim();
 
 const get_flat_lineage_from_query = (sqlQuery) => {
     const pythonProcess = spawnSync('python3', ["lineage_extract.py", sqlQuery]);
