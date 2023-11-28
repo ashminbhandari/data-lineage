@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 import express, { query } from 'express';
 import LineageDB from './lineagedb.js';
 import cors from 'cors';
 import {spawnSync} from 'child_process';
 import bodyParser from 'body-parser';
 import {regex_extract_tbl_names} from './util/util.js';
+=======
+const express = require('express');
+const LineageDB = require('./lineagedb');
+
+>>>>>>> 50c378e63e6246080f8447259023700d723586e4
 const app = express();
 app.use(cors());
 
