@@ -17,3 +17,4 @@ VALUES (
 
 INSERT INTO Source (SourceName, SourceType, Description)
 VALUES ('Vehicle', 'Telematics', 'sensor readings');
+

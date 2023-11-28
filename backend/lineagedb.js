@@ -1,4 +1,4 @@
-const sqlite = require('sqlite3').verbose();
+import sqlite from 'sqlite3'
 
 // Note: for the first arguement, use ':memory' for an in-memory database, 
 // or give the relative location to the db file (e.g. './db/se641-lineage.db')

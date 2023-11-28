@@ -1,5 +1,6 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import Card from 'react-bootstrap/Card';
 
 const TableView = () => {
   const COLUMN_NAMES = ["first name", "last name", "User name"];
@@ -21,7 +22,8 @@ const TableView = () => {
     },
   ];
   return (
-    <Table striped bordered hover>
+    <div style={{margin: '1em'}}>
+    <Table striped bordered hover variant="dark">
       <thead>
         <tr>
           {COLUMN_NAMES.map((columnName) => (
@@ -39,6 +41,7 @@ const TableView = () => {
           ))}
       </tbody>
     </Table>
+    </div>
   );
 };
 

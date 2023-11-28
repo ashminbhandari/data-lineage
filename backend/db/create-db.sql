@@ -43,3 +43,11 @@ CREATE TABLE LineageEvent (
     FOREIGN KEY (sourceID) REFERENCES Source (sourceID),
     FOREIGN KEY (targetID) REFERENCES Target (targetID)
 );
+
+CREATE TABLE LineageEventRaw (
+    source_name TEXT NOT NULL,
+    target_name TEXT NOT NULL,
+    timestamp DATE NOT NULL
+)
+
+insert into tablex select * from tabley
