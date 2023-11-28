@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 import express, { query } from 'express';
 import LineageDB from './lineagedb.js';
 import cors from 'cors';
 import {spawnSync} from 'child_process';
 import bodyParser from 'body-parser';
 import {regex_extract_tbl_names} from './util/util.js';
-=======
-const express = require('express');
-const LineageDB = require('./lineagedb');
-
->>>>>>> 50c378e63e6246080f8447259023700d723586e4
 const app = express();
 app.use(cors());
 
@@ -25,7 +19,7 @@ const get_flat_lineage_from_query = (sqlQuery) => {
     console.log(source)
     console.log(target)
     const flat_lineage = [];
-    for (let i = 0; i < source.length; i++) {
+    for (let i = 0; i < source.length; i++) {ee
         for (let j = 0; j < target.length; j++) {
             flat_lineage.push([source[i], target[j]])
         }
