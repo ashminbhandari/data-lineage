@@ -17,6 +17,9 @@ class LineageDB {
 
             console.log('Connected to the in-memory SQlite database.');
         });
+
+        this.sources = this.refreshSources();
+        this.targets = this.refreshTargets();
     }
 
     //close db connection
@@ -65,6 +68,18 @@ class LineageDB {
     delete(table, condition) {
         const query = `DELETE FROM ${table} WHERE ${condition}`;
         return this.query(query);
+    }
+
+    refreshSources() {
+        const queryStr = "SELECT sourceID, sourceName FROM Source";
+        currentSources = this.query(queryStr);
+        return currentSources;
+    }
+
+    refreshTargets() {
+        const queryStr = "SELECT targetID, targetName FROM Target";
+        currentTargets = this.query(queryStr);
+        return currentTargets;
     }
 };
 

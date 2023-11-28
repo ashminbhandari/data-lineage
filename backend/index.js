@@ -27,6 +27,50 @@ const get_flat_lineage_from_query = (sqlQuery) => {
     return flat_lineage;
 }
 
+const createRandomEvent = () => {
+    const actions = ['create', 'transform', 'copy', 'move', 'delete', 'update'];
+    const event_source = db.sources[(Math.floor(Math.random() * db.sources.length))];
+    const event_target = db.targets[(Math.floor(Math.random() * db.targets.length))];
+    const event_action = events[(Math.floor(Math.random() * actions.length))];
+
+    const lineageEvent = {
+        timestamp: psim.getRandomTimestamp(),
+        action: event_action,
+        sourceID: event_source.sourceID,
+        targetID: event_target.targetID,
+        description: `Automated Event: ${event_action}`
+    };
+
+    return lineageEvent;
+}
+
+//generate requested number of random events and insert them into the database
+app.get('/api/lineage/data/create/:num', async (req, res, next) => {
+    const event_count = req.params.num;
+    let insertValsList = [];
+
+    for (let i = 0; i < event_count; i++) {
+        let ranEvent = createRandomEvent();
+
+        //TODO: update to work with beforeEntityID and afterEntityID
+        ranEvent.beforeEntityID = 'null';
+        ranEvent.afterEntityID = 'null';
+
+        insertValsList.push(`(${ranEvent.timestamp},${ranEvent.action},${ranEvent.description},${ranEvent.beforeEntityID},${ranEvent.afterEntityID},${ranEvent.sourceID},${ranEvent.targetID})`);
+    }
+
+    const insertVals = insertValsList.join(',');
+    const insertQuery = `INSERT INTO LineageEvent (timestamp, action, description, beforeEntityID, afterEntityID, sourceID, targetID) VALUES (${insertVals});`;
+
+    try {
+        await db.query(insertQuery);
+        res.status(200).send('Event received successfully');
+    }
+    catch (error) {
+        next(error);
+    }
+});
+
 app.post('/api/lineage/executeQuery', bodyParser.json(), async (req, res, next) => {
     let lineageResult = [];
     let queryResult = [];
@@ -109,6 +153,28 @@ app.put('/api/lineage/event', async (req, res, next) => {
         return res.status(400).send('Missing required fields.');
     }
 
+    //check if Source and Target exists first, if not then add it
+    if (!db.sources.sourceName.contains(source)) {
+        try {
+            await db.insert('Source', { source });
+            console.log('New source added successfully');
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    
+    if (!db.targets.targetName.contains(target)) {
+        try {
+            await db.insert('Target', { target });
+            console.log('New target added successfully');
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+
+    //add event
     try {
         await db.insert('LineageEvent', { timestamp, source, target, event, beforeEntity, afterEntity });
         res.status(200).send('Event added successfully');
