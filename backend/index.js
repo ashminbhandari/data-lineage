@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 
 const port = 3001;
-const db = new LineageDB('./db/se641-lineage.db');
+const db = new LineageDB('./db/chinook.db');
 
 const get_flat_lineage_from_query = (sqlQuery) => {
     const pythonProcess = spawnSync('python3', ["lineage_extract.py", sqlQuery]);
@@ -36,6 +36,13 @@ app.post('/api/lineage/executeQuery', bodyParser.json(), async (req, res, next) 
 
         const flat_lineage = get_flat_lineage_from_query(req.body.sqlQuery);
         const date_now = new Date().toISOString();
+
+        await db.db.run(`CREATE TABLE IF NOT EXISTS LineageEventRaw (
+            source_name text not null, 
+            target_name text not null, 
+            timestamp date not null
+            )`
+        );
 
         // Execute db.insert operations sequentially 
         for (let i = 0; i < flat_lineage.length; i++) {
